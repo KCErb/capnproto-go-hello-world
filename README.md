@@ -1,0 +1,1 @@
+# capnproto-go-hello-world
