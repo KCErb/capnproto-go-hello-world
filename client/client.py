@@ -11,6 +11,5 @@ client = capnp.TwoPartyClient('localhost:8080')
 greeter = client.bootstrap().cast_as(hello_world_capnp.Greeter)
 
 promise = greeter.greet({"name": "world"})
-
 result = promise.wait()
-print(result)
+print(result.response)

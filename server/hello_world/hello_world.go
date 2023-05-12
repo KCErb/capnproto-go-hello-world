@@ -37,7 +37,7 @@ func (GreeterServer) Greet(ctx context.Context, call Greeter_greet) error {
 	}
 
 	// Set 'text' of response and send back
-	resp.SetText("Hello" + name)
+	resp.SetText("Hello " + name + "!")
 	res.SetResponse(resp)
 	return nil
 }
