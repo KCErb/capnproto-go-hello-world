@@ -35,20 +35,25 @@ func main() {
 			os.Exit(1)
 		}
 		d := time.Now().Add(deadline)
-		ctx, cancel := context.WithDeadline(context.Background(), d)
-		defer cancel()
-
+		ctx, _ := context.WithDeadline(context.Background(), d)
 		// Handle connections in a new goroutine.
 		go handleRequest(ctx, server, conn)
 	}
 }
 
+type ErrorReporter struct{}
+
+func (ErrorReporter) ReportError(err error) {
+	fmt.Println(err)
+}
+
 func handleRequest(ctx context.Context, server hw.GreeterServer, rwc net.Conn) error {
+	fmt.Println("creating client")
 	client := hw.Greeter_ServerToClient(server)
 	conn := rpc.NewConn(rpc.NewStreamTransport(rwc), &rpc.Options{
 		BootstrapClient: capnp.Client(client),
+		ErrorReporter:   ErrorReporter{},
 	})
-	fmt.Println("defering close")
 	defer conn.Close()
 	select {
 	case <-conn.Done():
